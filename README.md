@@ -3,4 +3,4 @@
 HTTP Service Provider for Ionic
 
 
-![Pombo](pombo.png)
+![Pombo](http://images.faena.com/wp-content/uploads/sites/4/2015/08/pigeon_messengers_harpers_engraving-423x423.png)
