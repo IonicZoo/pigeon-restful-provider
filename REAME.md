@@ -1,3 +1,3 @@
 # Pombo Restful Provider
 
-## HTTP Service Provider for Ionic
+HTTP Service Provider for Ionic
