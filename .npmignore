@@ -6,9 +6,11 @@ README.md
 node_modules
 npm-debug.log
 img.jpg
+img.png
 package.json
 tsconfig.json
 .gitlab-ci.yml
 .idea
 *.ts
 !*.d.ts
+img.*
