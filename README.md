@@ -6,7 +6,7 @@
 
 # Pigeon Restful Provider
 
-HTTP Service Provider for Ionic
+HTTP Service Provider for Ionic: Our skillful mail pigeon will help you carry out REST requests. Our Pigeon is a RESTful Provider.
 
 
 ## Install
