@@ -1,14 +1,15 @@
-import { AlertController, LoadingController } from 'ionic-angular';
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
-import 'rxjs/add/operator/map';
 
-declare const APP_WS: string;
-declare const APP_WS_CODE: Array<Array<string>>;
-declare const DEBUG: boolean;
+import { Config } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
+
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 
 /**
- * Pombo Restful Provider
+ * Pigeon Restful Provider
  *
  * HTTP Service Provider for Ionic
  */
@@ -19,105 +20,127 @@ export class RestfulProvider {
    * Request Method HTTP
    *
    * ``` js
-   * restful = Restful();
    *
+   * console.log('Run');
+   *
+   * restful: Restful = Restful();
+   * restful.request('get', '/api/1.0/user')
+   *  .then((data) => { restful.alert('Status', data.statusText); })
+   *  .catch((data) => { restful.errorMessage(data); });
+   *
+   * console.log('Or');
+   *
+   * let data: Promise = restful.request('get', '/api/1.0/user');
    * ```
    *
-   * @param  {Http}              http        provider http
-   * @param  {LoadingController} loadingCtrl controller loading
+   * @param  {HttpClient}              http        provider http
+   * @param  {Config}            config      provider http
    * @param  {AlertController}   alertCtrl   controller alert
+   * @param  {LoadingController} loadingCtrl controller loading
    */
   constructor(
-    private http: Http,
-    private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController) { }
+    private http: HttpClient,
+    private config: Config,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController) { }
+
 
   /**
    * Request Method HTTP
    *
    * ``` js
-   * restful.request('get', '/api/v1.0/post', (data) => {alert('success')}, (data) => {alert('error')});
-   *
+   * restful.request('get', '/api/1.0/user')
+   *  .then((data) => { restful.alert('Status', data.statusText); })
+   *  .catch((data) => { restful.errorMessage(data); });
    * ```
    *
    * @param  {string}    method  http method
    * @param  {string}    url     server url
-   * @param  {Object}    data    request data
-   * @param  {any}       success success function
-   * @param  {any}       error   error function
-   * @return {void}
+   * @param  {any}       body    request body
+   * @param  {any}       params  request params
+   * @return {Promise}
    */
-  request(method: string, url: string, data: Object = {}, success: any = false, error: any = false): void {
-    let loader = this.loadingCtrl.create({});
+  public request(
+    method: string,
+    url: string,
+    body?: any,
+    params: HttpParams = new HttpParams({}),
+    headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })) {
 
-    loader.present();
-    this.http[method](APP_WS + url, JSON.stringify(data), {
-      headers: new Headers({ 'Content-Type': 'application/json' })
-    }).map(response => response.json()).subscribe(data => {
-      if (DEBUG) console.info(data)
-      if (success) success(data);
-      loader.dismiss();
-    },
-      err => {
-        if (DEBUG) console.error(err)
-        if (error) error(err);
-        else this.errorMessage(err);
+    return new Promise((success, error) => {
+      const debug: string = this.config.get('pigeon_debug') || false;
+      const host: string = this.config.get('pigeon_host') || '';
+      let loader: any = this.loadingCtrl.create({});
+
+      if (this.config.get('pigeon_loader')) loader.present();
+
+      this.http.request(method, host + url, {
+        body: JSON.stringify(body),
+        headers: headers,
+        params: params
+      }).subscribe((data: any) => {
         loader.dismiss();
+        if (debug) console.info(data);
+        success(data);
+      }, (data: any) => {
+        loader.dismiss();
+        if (debug) console.error(data);
+        if (this.config.get('pigeon_alert')) this.errorMessage(data);
+        error(data);
       });
+    });
+
   }
 
-  /**
-
-   */
-
-  /**
-   * Default Message Error
-   *
-   * ``` js
-   * restful.request('get', '/api/v1.0/post', (data) => {alert('success')}, (err) => {restful.errorMessage(err)});
-   *
-   * ```
-   *
-   * @param {any} err http error return
-   * @return {void}
-   */
-  errorMessage(err: any): void {
-    if (err.type == 2 || err.type == 3) {
-      if (APP_WS_CODE[err.status] !== undefined) {
-        this.alert(APP_WS_CODE[err.status][0], APP_WS_CODE[err.status][1]);
-      } else {
-        this.alert('Ops!', err.statusText)
-      }
-    }
-  }
 
   /**
    * Alert
    *
    * ``` js
-   * restful.request('get', '/api/v1.0/post', (data) => {restful.alert('Success', 'Ehhh')});
-   *
+   * restful.request('get', '/api/1.0/user')
+   *  .then((data) => { restful.alert('Status', data.statusText); })
+   *  .catch((data) => { restful.errorMessage(data); });
    * ```
    *
    * @param  {string} title    alert title
    * @param  {string} subTitle alert subtitle
-   * @param  {any}    func     success function
-   * @param  {any}    data     success return data
    * @return {void}
    */
-  alert(title: string, subTitle: string, func: any = false, data?:any): void {
+  private alert(
+    title: string,
+    subTitle: string): void {
     this.alertCtrl.create({
       title: title,
       subTitle: subTitle,
       enableBackdropDismiss: false,
       buttons: [{
         text: 'OK',
-        role: 'ok',
-        handler: () => {
-          if (func) func(data)
-        }
-      }
-      ]
+        role: 'ok'
+      }]
     }).present();
+  }
+
+
+  /**
+   * Default Message Error
+   *
+   * ``` js
+   * restful.request('get', '/api/1.0/user')
+   *  .then((data) => { restful.alert('Status', data.statusText); })
+   *  .catch((data) => { restful.errorMessage(data); });
+   * ```
+   *
+   * @param {any}   error http error return
+   * @return {void}
+   */
+  private errorMessage(
+    error: any): void {
+    const status_http: string = this.config.get('pigeon_status');
+
+    if (status_http && status_http[error.status] !== undefined) {
+      this.alert(status_http[error.status][0], status_http[error.status][1]);
+    } else {
+      this.alert(error.status, error.error);
+    }
   }
 }

@@ -15,11 +15,13 @@ HTTP Service Provider for Ionic: Our skillful mail pigeon will help you carry ou
 npm install @ioniczoo/pigeon-restful-provider --save
 ```
 
-## Import to `app.module.ts`
+## Import `HttpClientModule` and  'RestfulProvider' to  `app.module.ts`
 
 ```ts
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+
+import { HttpClientModule } from '@angular/common/http';
 import { RestfulProvider } from '@ioniczoo/pigeon-restful-provider';
 
 import { MyApp } from './app.component';
@@ -29,7 +31,14 @@ import { MyApp } from './app.component';
     MyApp
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    HttpClientModule,
+    IonicModule.forRoot(MyApp, {
+      pigeon_debug: true,
+      pigeon_loader: true,
+      pigeon_alert: true,
+      pigeon_host: 'https://randomuser.me',
+      pigeon_status: {404: ['Ops', '404 - Not found']}
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -37,7 +46,7 @@ import { MyApp } from './app.component';
   ],
   providers: [
     RestfulProvider,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
 export class AppModule {}
@@ -46,6 +55,7 @@ export class AppModule {}
 ## Example
 
 ```ts
+...
 import { RestfulProvider } from '@ioniczoo/pigeon-restful-provider';
 
 @IonicPage()
@@ -56,11 +66,9 @@ import { RestfulProvider } from '@ioniczoo/pigeon-restful-provider';
 export class HomePage {
 
   constructor(private restful: RestfulProvider) {
-    this.restful.request('get', '/api').subscribe(data => {
-      console.log(data);
-    }, err => {
-        console.log(err);
-    })
+    this.restful.request('get', '/api/?results=10')
+      .then((data) => { console.log(data); })
+      .catch((data) => { console.log(data); });
   }
 }
 

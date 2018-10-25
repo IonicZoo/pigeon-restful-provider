@@ -2,12 +2,17 @@
   "name": "@ioniczoo/pigeon-restful-provider",
   "version": "0.0.1",
   "description": "HTTP Service Provider for Ionic: Our skillful mail pigeon will help you carry out REST requests. Our Pigeon is a RESTful Provider.",
-  "main": "index.ts",
+  "main": "index.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "build": "tsc --noStrictGenericChecks",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postversion": "git push --follow-tags"
+    "postversion": "git push --follow-tags",
+    "publish": "npm publish --access=public",
+    "minify": "babel index.js -o index.js --compact --no-comments --minified",
+    "clear": "rm -rf index.js index.js.map package-lock.json index.d.ts ./node_modules"
   },
   "repository": {
     "type": "git",
@@ -16,6 +21,8 @@
   "keywords": [
     "ionic",
     "ionic2",
+    "ionic3",
+    "ionic4",
     "provider",
     "typescript",
     "angular",
@@ -29,23 +36,30 @@
     "app",
     "ioniczoo"
   ],
-  "author": "André Argôlo",
+  "author": {
+    "name": "André Argôlo"
+  },
   "license": "SEE LICENSE IN GNU GPLv3",
   "bugs": {
     "url": "https://gitlab.com/IonicZoo/pigeon-restful-provider/issues"
   },
   "homepage": "https://ioniczoo.gitlab.io",
+  "ngPackage": {
+    "lib": {
+      "entryFile": "index.ts"
+    }
+  },
   "devDependencies": {
     "typescript": "^2.4.2"
   },
   "dependencies": {
-    "@angular/core": "^4.3.3",
-    "@angular/http": "^4.3.3",
-    "@angular/forms": "^4.4.3",
-    "@angular/platform-browser": "^4.4.3",
-    "@angular/common": "^4.4.3",
-    "ionic-angular": "^3.7.0",
-    "rxjs": "^5.4.3",
-    "zone.js": "^0.8.17"
+    "@angular/common": "^5.2.11",
+    "@angular/core": "^5.2.11",
+    "@angular/forms": "^5.2.11",
+    "@angular/http": "^5.2.11",
+    "@angular/platform-browser": "^5.2.11",
+    "ionic-angular": "^3.9.2",
+    "rxjs": "^5.5.11",
+    "zone.js": "^0.8.26"
   }
 }

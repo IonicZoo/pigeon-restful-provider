@@ -14,3 +14,4 @@ tsconfig.json
 *.ts
 !*.d.ts
 img.*
+.DS_Store
