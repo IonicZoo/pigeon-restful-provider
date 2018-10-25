@@ -26,14 +26,14 @@ build:
     - cp typedoc.json ./build/typedoc.json
     - cp package-lock.json ./build/package-lock.json
     - cp README.md ./build/README.md
-    - cp LICENCE ./build/LICENCE
+    - cp LICENSE ./build/LICENSE
   artifacts:
     expire_in: 3 hrs
     paths:
     - build/
 
 
-deploy:
+publish:
   image: node:alpine
   stage: deploy
   when: on_success
