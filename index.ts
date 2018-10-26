@@ -25,8 +25,8 @@ export class RestfulProvider {
    *
    * restful: Restful = Restful();
    * restful.request('get', '/api/1.0/user')
-   *  .then((data) => { restful.alert('Status', data.statusText); })
-   *  .catch((data) => { restful.errorMessage(data); });
+   *   .then((data) => { console.log(data); })
+   *   .catch((data) => { console.log(data); });
    *
    * console.log('Or');
    *
@@ -50,14 +50,15 @@ export class RestfulProvider {
    *
    * ``` js
    * restful.request('get', '/api/1.0/user')
-   *  .then((data) => { restful.alert('Status', data.statusText); })
-   *  .catch((data) => { restful.errorMessage(data); });
+   *   .then((data) => { console.log(data); })
+   *   .catch((data) => { console.log(data); });
    * ```
    *
-   * @param  {string}    method  http method
-   * @param  {string}    url     server url
-   * @param  {any}       body    request body
-   * @param  {any}       params  request params
+   * @param  {string}      method  http    method
+   * @param  {string}      url     server  url
+   * @param  {any}         body    request body
+   * @param  {HttpParams}  params  request params
+   * @param  {HttpHeaders} headers request headers
    * @return {Promise}
    */
   public request(
@@ -98,8 +99,8 @@ export class RestfulProvider {
    *
    * ``` js
    * restful.request('get', '/api/1.0/user')
-   *  .then((data) => { restful.alert('Status', data.statusText); })
-   *  .catch((data) => { restful.errorMessage(data); });
+   *   .then((data) => { console.log(data); })
+   *   .catch((data) => { console.log(data); });
    * ```
    *
    * @param  {string} title    alert title
@@ -126,8 +127,8 @@ export class RestfulProvider {
    *
    * ``` js
    * restful.request('get', '/api/1.0/user')
-   *  .then((data) => { restful.alert('Status', data.statusText); })
-   *  .catch((data) => { restful.errorMessage(data); });
+   *   .then((data) => { console.log(data); })
+   *   .catch((data) => { console.log(data); });
    * ```
    *
    * @param {any}   error http error return

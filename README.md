@@ -33,11 +33,13 @@ import { MyApp } from './app.component';
   imports: [
     HttpClientModule,
     IonicModule.forRoot(MyApp, {
-      pigeon_debug: true,
-      pigeon_loader: true,
-      pigeon_alert: true,
-      pigeon_host: 'https://randomuser.me',
-      pigeon_status: {404: ['Ops', '404 - Not found']}
+      pigeon_debug: true, // Enable Debug
+      pigeon_loader: true, // Enable Loading
+      pigeon_alert: true, // Enable Error Alert
+      pigeon_host: 'https://randomuser.me', // Add Host
+      pigeon_status: { // Add Custom Message
+        404: ['Ops', '404 - Not found']
+      }
     })
   ],
   bootstrap: [IonicApp],
@@ -66,6 +68,14 @@ import { RestfulProvider } from '@ioniczoo/pigeon-restful-provider';
 export class HomePage {
 
   constructor(private restful: RestfulProvider) {
+
+    /**
+    * @param  {string}      method  http    method
+    * @param  {string}      url     server  url
+    * @param  {any}         body    request body
+    * @param  {HttpParams}  params  request params
+    * @param  {HttpHeaders} headers request headers
+    */
     this.restful.request('get', '/api/?results=10')
       .then((data) => { console.log(data); })
       .catch((data) => { console.log(data); });
